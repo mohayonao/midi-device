@@ -51,5 +51,21 @@ export default class CustomMIDIDevice extends MIDIDevice {
 }
 ```
 
+test
+
+```js
+import MIDIDevice from "@mohayonao/midi-device/test";
+
+let midiDevice = new MIDIDevice();
+
+midiDevice.open().then((input) => {
+  input.send([ 0x00, 0x01, 0x02 ]);
+});
+
+midiDevice._onmidimessage = (e) => {
+  // { e.receiveTime: 0, e.data: new Uint8Array([ 0x00, 0x01, 0x02 ]) }
+};
+```
+
 ## License
 MIT
