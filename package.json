@@ -1,6 +1,6 @@
 {
   "name": "@mohayonao/midi-device",
-  "description": "isomorphic utility for midi device",
+  "description": "isomorphic abstract class for MIDI device",
   "version": "0.1.0",
   "author": "Nao Yonamine <mohayonao@gmail.com>",
   "bugs": {
