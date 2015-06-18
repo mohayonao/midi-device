@@ -1,7 +1,7 @@
 {
   "name": "@mohayonao/midi-device",
   "description": "isomorphic utility for midi device",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "author": "Nao Yonamine <mohayonao@gmail.com>",
   "bugs": {
     "url": "https://github.com/mohayonao/midi-device/issues"
