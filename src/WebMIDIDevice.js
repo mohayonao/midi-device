@@ -17,25 +17,41 @@ export default class WebMIDIDevice extends MIDIDevice {
         return reject(new TypeError("Web MIDI API is not supported"));
       }
 
-      if (this._input !== null) {
+      if (this._input !== null || this._output !== null) {
         return reject(new TypeError(`${this.deviceName} has already been opened`));
       }
 
-      let successCallback = (m) => {
-        let input = findMIDIPortByName(m.inputs.values(), this.deviceName);
+      let successCallback = (access) => {
+        this._access = access;
 
-        if (input === null) {
+        let input = findMIDIPortByName(access.inputs.values(), this.deviceName);
+        let output = findMIDIPortByName(access.outputs.values(), this.deviceName);
+
+        if (input === null && output === null) {
           return reject(new TypeError(`${this.deviceName} is not found`));
         }
 
-        this._input = input;
+        if (input !== null) {
+          this._input = input;
 
-        input.onmidimessage = (e) => {
-          this._onmidimessage(e);
-        };
+          input.onmidimessage = (e) => {
+            this._onmidimessage(e);
+          };
+        }
 
-        return input.open().then(resolve, reject);
+        if (output !== null) {
+          this._output = output;
+        }
+
+        return Promise.all([
+          this._input && this._input.open(),
+          this._output && this._output.open(),
+        ]).then(resolve, reject);
       };
+
+      if (this._access) {
+        return successCallback(this._access);
+      }
 
       return global.navigator.requestMIDIAccess().then(successCallback, reject);
     });
@@ -43,11 +59,26 @@ export default class WebMIDIDevice extends MIDIDevice {
 
   close() {
     return new Promise((resolve, reject) => {
-      if (this._input === null) {
+      if (this._input === null && this._output === null) {
         return reject(new TypeError(`${this.deviceName} has already been closed`));
       }
-      this._input.close().then(resolve, reject);
+
+      let input = this._input;
+      let output = this._output;
+
       this._input = null;
+      this._output = null;
+
+      return Promise.all([
+        input && input.close(),
+        output && output.close(),
+      ]).then(resolve, reject);
     });
+  }
+
+  send(data) {
+    if (this._output !== null) {
+      this._output.send(data);
+    }
   }
 }

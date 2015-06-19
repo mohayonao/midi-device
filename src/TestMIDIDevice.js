@@ -24,11 +24,12 @@ export function convertMessage(value = {}) {
 export default class TestMIDIDevice extends MIDIDevice {
   open() {
     return new Promise((resolve, reject) => {
-      if (this._input !== null) {
+      if (this._input !== null || this._output !== null) {
         return reject(new TypeError(`${this.deviceName} has already been opened`));
       }
 
       let input = {};
+      let output = {};
 
       this._input = input;
 
@@ -36,21 +37,28 @@ export default class TestMIDIDevice extends MIDIDevice {
         this._onmidimessage(convertMessage(e));
       };
 
-      resolve(input);
+      this._output = output;
+
+      resolve([ input, output ]);
     });
   }
 
   close() {
     return new Promise((resolve, reject) => {
-      if (this._input === null) {
+      if (this._input === null && this._output === null) {
         return reject(new TypeError(`${this.deviceName} has already been closed`));
       }
       let input = this._input;
+      let output = this._output;
 
       this._input.send = () => {};
-      this._input = null;
 
-      resolve(input);
+      this._input = null;
+      this._output = null;
+
+      resolve([ input, output ]);
     });
   }
+
+  send() {}
 }
