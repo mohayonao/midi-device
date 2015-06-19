@@ -19,8 +19,9 @@ npm install @mohayonao/midi-device
 - `deviceName: string`
 
 #### Instance methods
-- `open(): Promise<any>`
-- `close(): Promise<any>`
+- `open(): Promise<[ input: any, output: any ]>`
+- `close(): Promise<[ input: any, output: any ]>`
+- `send(data: number[]): void`
 - `_onmidimessage(e: MIDIMessageEvent): void`
 
 ## Usage
@@ -77,8 +78,8 @@ describe("CustomMIDIDevice", () => {
   it("works", (done) => {
     let midiDevice = new TestCustomMIDIDevice();
 
-    midiDevice.open().then((input) => {
-      input.send([ 0x00, 0x01, 0x02 ]);
+    midiDevice.open().then(([ input ]) => {
+      input.recv([ 0x00, 0x01, 0x02 ]);
     });
 
     midiDevice.on("message", (e) => {
