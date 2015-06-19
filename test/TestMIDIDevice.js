@@ -60,8 +60,15 @@ describe("TestMIDIDevice", () => {
     it("works", () => {
       let midiDevice = new TestMIDIDevice("DX7IIFD");
 
-      assert.doesNotThrow(() => {
+      return midiDevice.open().then((ports) => {
+        let output = ports[1];
+
+        output.onmessage = sinon.spy();
+
         midiDevice.send([ 0xb0, 0x16, 0x01 ]);
+
+        assert(output.onmessage.calledOnce);
+        assert.deepEqual(output.onmessage.args[0][0], [ 0xb0, 0x16, 0x01 ]);
       });
     });
   });
