@@ -33,7 +33,7 @@ export default class TestMIDIDevice extends MIDIDevice {
 
       this._input = input;
 
-      input.send = (e) => {
+      input.recv = (e) => {
         this._onmidimessage(convertMessage(e));
       };
 
@@ -51,7 +51,7 @@ export default class TestMIDIDevice extends MIDIDevice {
       let input = this._input;
       let output = this._output;
 
-      this._input.send = () => {};
+      this._input.recv = () => {};
 
       this._input = null;
       this._output = null;

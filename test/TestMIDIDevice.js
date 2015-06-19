@@ -19,10 +19,10 @@ describe("TestMIDIDevice", () => {
       midiDevice._onmidimessage = sinon.spy();
 
       return midiDevice.open().then(([ input, output ]) => {
-        assert(typeof input.send === "function");
-        assert(typeof output.send !== "function");
+        assert(typeof input.recv === "function");
+        assert(typeof output.recv !== "function");
 
-        input.send([ 0x00, 0x01, 0x02 ]);
+        input.recv([ 0x00, 0x01, 0x02 ]);
 
         assert(midiDevice._onmidimessage.calledOnce);
         assert(midiDevice._onmidimessage.args[0][0].receivedTime === 0);
@@ -42,13 +42,13 @@ describe("TestMIDIDevice", () => {
 
       return midiDevice.open().then(() => {
         return midiDevice.close().then(([ input, output ]) => {
-          assert(typeof input.send === "function");
-          assert(typeof output.send !== "function");
+          assert(typeof input.recv === "function");
+          assert(typeof output.recv !== "function");
 
           return midiDevice.close().catch((e) => {
             assert(e.message === "DX7IIFD has already been closed");
 
-            input.send([ 0x00, 0x01, 0x02 ]);
+            input.recv([ 0x00, 0x01, 0x02 ]);
 
             assert(!midiDevice._onmidimessage.called);
           });
