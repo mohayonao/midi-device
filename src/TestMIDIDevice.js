@@ -60,5 +60,11 @@ export default class TestMIDIDevice extends MIDIDevice {
     });
   }
 
-  send() {}
+  send(data) {
+    if (this._output !== null) {
+      if (typeof this._output.onmessage === "function") {
+        this._output.onmessage(data);
+      }
+    }
+  }
 }

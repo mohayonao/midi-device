@@ -75,17 +75,26 @@ import CustomMIDIDevice from "../src/CustomMIDIDevice";
 let TestCustomMIDIDevice = CustomMIDIDevice.extends(TestMIDIDevice);
 
 describe("CustomMIDIDevice", () => {
-  it("works", (done) => {
+  it("works", () => {
     let midiDevice = new TestCustomMIDIDevice();
+    let onmessage = sinon.spy();
 
-    midiDevice.open().then(([ input ]) => {
+    midiDevice.on("message", onmessage);
+
+    return midiDevice.open().then(([ input, output ]) => {
       input.recv([ 0x00, 0x01, 0x02 ]);
-    });
 
-    midiDevice.on("message", (e) => {
-      assert(e.receivedTime === 0);
-      assert.deepEqual(e.data, new Uint8Array([ 0x00, 0x01, 0x02 ]));
-      done();
+      assert(onmessage.calledOnce);
+
+      let msg = onmessage.args[0][0];
+      assert(typeof msg.receivedTime === "number");
+      assert.deepEqual(msg.data, new Uint8Array([ 0x00, 0x01, 0x02 ]));
+
+      output.onmessage = sinon.spy();
+      output.send([ 0x03, 0x04, 0x05 ]);
+
+      assert(output.onmessage.calledOnce);
+      assert.deepEqual(output.onmessage.args[0][0], [ 0x03, 0x04, 0x05 ]);
     });
   });
 });
