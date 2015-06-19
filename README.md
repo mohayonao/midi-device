@@ -25,46 +25,69 @@ npm install @mohayonao/midi-device
 
 ## Usage
 
-node.js
+Create a subclass that is inherited from a base class needed for each target environment.
 
 ```js
-import MIDIDevice from "@mohayonao/midi-device";
-```
+// CustomMIDIDevice.js
+export default {
+  extends(MIDIDevice) {
+    return class CustomMIDIDevice extends MIDIDevice {
+      constructor(deviceName = "Name of Custom Device") {
+        super(deviceName);
 
-browser
-
-```js
-import MIDIDevice from "@mohayonao/midi-device/webmidi";
-```
-
-common
-
-```js
-export default class CustomMIDIDevice extends MIDIDevice {
-  constructor(deviceName = "Name of Custom Device") {
-    super(deviceName);
-
-    this._onmidimessage = (e) => {
-      this.emit(e.type, e);
-    };
+        this._onmidimessage = (e) => {
+          this.emit(e.type, e);
+        };
+      }
+    }
   }
-}
+};
 ```
 
-test
+##### Node.js
 
 ```js
-import MIDIDevice from "@mohayonao/midi-device/test";
+// NodeCustomMIDIDevice.js
+import NodeMIDIDevice from "@mohayonao/midi-device";
+import CustomMIDIDevice from "./CustomMIDIDevice";
 
-let midiDevice = new MIDIDevice();
+export default CustomMIDIDevice.extends(NodeMIDIDevice);
+```
 
-midiDevice.open().then((input) => {
-  input.send([ 0x00, 0x01, 0x02 ]);
+##### Browser
+
+```js
+// WebCustomMIDIDevice.js
+import WebMIDIDevice from "@mohayonao/midi-device/webmidi";
+import CustomMIDIDevice from "./CustomMIDIDevice";
+
+export default CustomMIDIDevice.extends(WebMIDIDevice);
+```
+
+##### Test
+This provides API interfaces that not require a real MIDI device.
+
+```js
+import TestMIDIDevice from "@mohayonao/midi-device/test";
+import CustomMIDIDevice from "../src/CustomMIDIDevice";
+
+let TestCustomMIDIDevice = CustomMIDIDevice.extends(TestMIDIDevice);
+
+describe("CustomMIDIDevice", () => {
+  it("works", (done) => {
+    let midiDevice = new TestCustomMIDIDevice();
+
+    midiDevice.open().then((input) => {
+      input.send([ 0x00, 0x01, 0x02 ]);
+    });
+
+    midiDevice.on("message", (e) => {
+      assert(e.receivedTime === 0);
+      assert.deepEqual(e.data, new Uint8Array([ 0x00, 0x01, 0x02 ]));
+      done();
+    });
+  });
 });
-
-midiDevice._onmidimessage = (e) => {
-  // { e.receiveTime: 0, e.data: new Uint8Array([ 0x00, 0x01, 0x02 ]) }
-};
 ```
 
 ## License
