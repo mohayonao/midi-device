@@ -18,10 +18,11 @@ describe("TestMIDIDevice", () => {
 
       midiDevice._onmidimessage = sinon.spy();
 
-      return midiDevice.open().then((input) => {
-        assert(typeof input.send === "function");
+      return midiDevice.open().then(([ input, output ]) => {
+        assert(typeof input.recv === "function");
+        assert(typeof output.recv !== "function");
 
-        input.send([ 0x00, 0x01, 0x02 ]);
+        input.recv([ 0x00, 0x01, 0x02 ]);
 
         assert(midiDevice._onmidimessage.calledOnce);
         assert(midiDevice._onmidimessage.args[0][0].receivedTime === 0);
@@ -40,16 +41,27 @@ describe("TestMIDIDevice", () => {
       midiDevice._onmidimessage = sinon.spy();
 
       return midiDevice.open().then(() => {
-        return midiDevice.close().then((input) => {
-          assert(typeof input.send === "function");
+        return midiDevice.close().then(([ input, output ]) => {
+          assert(typeof input.recv === "function");
+          assert(typeof output.recv !== "function");
+
           return midiDevice.close().catch((e) => {
             assert(e.message === "DX7IIFD has already been closed");
 
-            input.send([ 0x00, 0x01, 0x02 ]);
+            input.recv([ 0x00, 0x01, 0x02 ]);
 
             assert(!midiDevice._onmidimessage.called);
           });
         });
+      });
+    });
+  });
+  describe("#send(data: number[]): void", () => {
+    it("works", () => {
+      let midiDevice = new TestMIDIDevice("DX7IIFD");
+
+      assert.doesNotThrow(() => {
+        midiDevice.send([ 0xb0, 0x16, 0x01 ]);
       });
     });
   });

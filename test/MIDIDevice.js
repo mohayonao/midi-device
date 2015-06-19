@@ -36,6 +36,15 @@ describe("MIDIDevice", () => {
       });
     });
   });
+  describe("#send(data: number[]): void", () => {
+    it("works", () => {
+      let midiDevice = new MIDIDevice("DX7IIFD");
+
+      assert.throws(() => {
+        midiDevice.send([ 0xb0, 0x16, 0x01 ]);
+      }, "subclass responsibility");
+    });
+  });
   describe("#_onmidimessage(): void", () => {
     it("works", () => {
       let midiDevice = new MIDIDevice("DX7IIFD");

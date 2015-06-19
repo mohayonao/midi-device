@@ -30,4 +30,13 @@ describe("NodeMIDIDevice", () => {
       });
     });
   });
+  describe("#send(data: number[]): void", () => {
+    it("works", () => {
+      let midiDevice = new NodeMIDIDevice("DX7IIFD");
+
+      assert.doesNotThrow(() => {
+        midiDevice.send([ 0xb0, 0x16, 0x01 ]);
+      });
+    });
+  });
 });

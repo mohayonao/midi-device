@@ -5,6 +5,7 @@ export default class MIDIDevice extends EventEmitter {
     super();
 
     this._input = null;
+    this._output = null;
     this._deviceName = deviceName;
   }
 
@@ -18,6 +19,10 @@ export default class MIDIDevice extends EventEmitter {
 
   close() {
     return Promise.reject(new Error("subclass responsibility"));
+  }
+
+  send() {
+    throw new Error("subclass responsibility");
   }
 
   _onmidimessage() {}
