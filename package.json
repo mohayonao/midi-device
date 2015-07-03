@@ -10,14 +10,14 @@
     "midi": "^0.9.3"
   },
   "devDependencies": {
-    "babel": "^5.5.8",
-    "babel-eslint": "^3.1.17",
-    "eslint": "^0.23.0",
+    "babel": "^5.6.14",
+    "babel-eslint": "^3.1.20",
+    "eslint": "^0.24.0",
     "espower-babel": "^3.2.0",
     "isparta": "^3.0.3",
     "mocha": "^2.2.5",
     "power-assert": "^0.11.0",
-    "sinon": "^1.15.3"
+    "sinon": "^1.15.4"
   },
   "files": [
     "package.json",
