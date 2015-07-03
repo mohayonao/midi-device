@@ -12,9 +12,17 @@ describe("TestMIDIDevice", () => {
       assert(midiDevice instanceof MIDIDevice);
     });
   });
+  describe(".requestDeviceNames: Promise<object>", () => {
+    it("works", () => {
+      return TestMIDIDevice.requestDeviceNames().then((result) => {
+        assert.deepEqual(result.inputs, [ "TestDevice1", "TestDevice2" ]);
+        assert.deepEqual(result.outputs, [ "TestDevice1", "TestDevice2" ]);
+      });
+    });
+  });
   describe("#open(): Promise<{ send: function }>", () => {
     it("works", () => {
-      let midiDevice = new TestMIDIDevice("DX7IIFD");
+      let midiDevice = new TestMIDIDevice("TestDevice1");
 
       midiDevice._onmidimessage = sinon.spy();
 
@@ -29,14 +37,14 @@ describe("TestMIDIDevice", () => {
         assert.deepEqual(midiDevice._onmidimessage.args[0][0].data, new Uint8Array([ 0x00, 0x01, 0x02 ]));
 
         return midiDevice.open().catch((e) => {
-          assert(e.message === "DX7IIFD has already been opened");
+          assert(e.message === "TestDevice1 has already been opened");
         });
       });
     });
   });
   describe("#close(): Promise<{ send: function }>", () => {
     it("works", () => {
-      let midiDevice = new TestMIDIDevice("DX7IIFD");
+      let midiDevice = new TestMIDIDevice("TestDevice1");
 
       midiDevice._onmidimessage = sinon.spy();
 
@@ -46,7 +54,7 @@ describe("TestMIDIDevice", () => {
           assert(typeof output.recv !== "function");
 
           return midiDevice.close().catch((e) => {
-            assert(e.message === "DX7IIFD has already been closed");
+            assert(e.message === "TestDevice1 has already been closed");
 
             input.recv([ 0x00, 0x01, 0x02 ]);
 
@@ -58,7 +66,7 @@ describe("TestMIDIDevice", () => {
   });
   describe("#send(data: number[]): void", () => {
     it("works", () => {
-      let midiDevice = new TestMIDIDevice("DX7IIFD");
+      let midiDevice = new TestMIDIDevice("TestDevice1");
 
       return midiDevice.open().then((ports) => {
         let output = ports[1];

@@ -10,7 +10,35 @@ function findMIDIPortByName(iter, deviceName) {
   return null;
 }
 
+function collectDeviceNames(iter) {
+  let result = [];
+
+  for (let x = iter.next(); !x.done; x = iter.next()) {
+    result.push(x.value.name);
+  }
+
+  return result;
+}
+
 export default class WebMIDIDevice extends MIDIDevice {
+  static requestDeviceNames() {
+    return new Promise((resolve, reject) => {
+      if (!global.navigator || typeof global.navigator.requestMIDIAccess !== "function") {
+        return reject(new TypeError("Web MIDI API is not supported"));
+      }
+
+      return global.navigator.requestMIDIAccess().then((access) => {
+        let inputDeviceNames = collectDeviceNames(access.inputs.values());
+        let outputDeviceNames = collectDeviceNames(access.outputs.values());
+
+        resolve({
+          inputs: inputDeviceNames,
+          outputs: outputDeviceNames,
+        });
+      }, reject);
+    });
+  }
+
   open() {
     return new Promise((resolve, reject) => {
       if (!global.navigator || typeof global.navigator.requestMIDIAccess !== "function") {

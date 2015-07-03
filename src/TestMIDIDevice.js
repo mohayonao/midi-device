@@ -1,5 +1,7 @@
 import MIDIDevice from "./MIDIDevice";
 
+const DEVICE_NAMES = [ "TestDevice1", "TestDevice2" ];
+
 export function convertMessage(value = {}) {
   let msg = {
     receivedTime: value.receivedTime,
@@ -22,10 +24,21 @@ export function convertMessage(value = {}) {
 }
 
 export default class TestMIDIDevice extends MIDIDevice {
+  static requestDeviceNames() {
+    return Promise.resolve({
+      inputs: DEVICE_NAMES.slice(),
+      outputs: DEVICE_NAMES.slice(),
+    });
+  }
+
   open() {
     return new Promise((resolve, reject) => {
       if (this._input !== null || this._output !== null) {
         return reject(new TypeError(`${this.deviceName} has already been opened`));
+      }
+
+      if (DEVICE_NAMES.indexOf(this.deviceName) === -1) {
+        return reject(new TypeError(`${this.deviceName} is not found`));
       }
 
       let input = {};

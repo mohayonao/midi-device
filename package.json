@@ -1,23 +1,24 @@
 {
   "name": "@mohayonao/midi-device",
   "description": "isomorphic abstract class for MIDI device",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "author": "Nao Yonamine <mohayonao@gmail.com>",
   "bugs": {
     "url": "https://github.com/mohayonao/midi-device/issues"
   },
   "dependencies": {
-    "midi": "^0.9.3"
+    "midi": "^0.9.3",
+    "synchronizer": "^0.1.0"
   },
   "devDependencies": {
-    "babel": "^5.5.8",
-    "babel-eslint": "^3.1.17",
-    "eslint": "^0.23.0",
+    "babel": "^5.6.14",
+    "babel-eslint": "^3.1.20",
+    "eslint": "^0.24.0",
     "espower-babel": "^3.2.0",
     "isparta": "^3.0.3",
     "mocha": "^2.2.5",
     "power-assert": "^0.11.0",
-    "sinon": "^1.15.3"
+    "sinon": "^1.15.4"
   },
   "files": [
     "package.json",

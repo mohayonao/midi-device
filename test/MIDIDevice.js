@@ -11,6 +11,13 @@ describe("MIDIDevice", () => {
       assert(midiDevice instanceof EventEmitter);
     });
   });
+  describe(".requestDeviceNames: Promise<object>", () => {
+    it("works", () => {
+      return MIDIDevice.requestDeviceNames().catch((e) => {
+        assert(e.message === "subclass responsibility");
+      });
+    });
+  });
   describe("#deviceName: string", () => {
     it("works", () => {
       let midiDevice = new MIDIDevice("DX7IIFD");

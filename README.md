@@ -15,6 +15,9 @@ npm install @mohayonao/midi-device
 ### MIDIDevice
 - `constructor(deviceName: string)`
 
+#### Class methods
+- `requestDeviceNames(): Promise<{ inputs: string[], outputs: string[] }>`
+
 #### Instance attributes
 - `deviceName: string`
 
@@ -75,6 +78,14 @@ import CustomMIDIDevice from "../src/CustomMIDIDevice";
 let TestCustomMIDIDevice = CustomMIDIDevice.extends(TestMIDIDevice);
 
 describe("CustomMIDIDevice", () => {
+  it("deviceNames", () => {
+    return TestCustomMIDIDevice.requestDeviceNames().then(([ inputs, outpus ]) => {
+      assert(Array.isArray(inputs));
+      assert(inputs.every(x => typeof x === "string"));
+      assert(Array.isArray(outputs));
+      assert(outputs.every(x => typeof x === "string"));
+    });
+  });
   it("works", () => {
     let midiDevice = new TestCustomMIDIDevice();
     let onmessage = sinon.spy();
