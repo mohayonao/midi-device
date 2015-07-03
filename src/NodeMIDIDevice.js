@@ -13,7 +13,35 @@ function findPortNumberByName(port, deviceName) {
   return -1;
 }
 
+function collectDeviceNames(port) {
+  let result = [];
+  let portCount = port.getPortCount();
+
+  for (let i = 0; i < portCount; i++) {
+    result.push(port.getPortName(i));
+  }
+
+  return result;
+}
+
 export default class NodeMIDIDevice extends MIDIDevice {
+  static requestDeviceNames() {
+    return new Promise((resolve) => {
+      let input = new MIDIInput();
+      let output = new MIDIOutput();
+      let inputDeviceNames = collectDeviceNames(input);
+      let outputDeviceNames = collectDeviceNames(output);
+
+      input.closePort();
+      output.closePort();
+
+      resolve({
+        inputs: inputDeviceNames,
+        outputs: outputDeviceNames,
+      });
+    });
+  }
+
   open() {
     return new Promise((resolve, reject) => {
       if (this._input !== null || this._output !== null) {

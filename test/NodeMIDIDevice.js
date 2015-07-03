@@ -11,6 +11,15 @@ describe("NodeMIDIDevice", () => {
       assert(midiDevice instanceof MIDIDevice);
     });
   });
+  describe(".requestDeviceNames: Promise<object>", () => {
+    // skip this test for travis ci
+    it.skip("works", () => {
+      return NodeMIDIDevice.requestDeviceNames().then((result) => {
+        assert(Array.isArray(result.inputs));
+        assert(Array.isArray(result.outputs));
+      });
+    });
+  });
   describe("#open(): Promise<midi.input>", () => {
     // skip this test for travis ci
     it.skip("works", () => {

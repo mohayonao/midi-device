@@ -11,6 +11,13 @@ describe("NodeMIDIDevice", () => {
       assert(midiDevice instanceof MIDIDevice);
     });
   });
+  describe(".requestDeviceNames: Promise<object>", () => {
+    it("works", () => {
+      return WebMIDIDevice.requestDeviceNames().catch((e) => {
+        assert(e.message === "Web MIDI API is not supported");
+      });
+    });
+  });
   describe("#open(): Promise<MIDIPort>", () => {
     it("works", () => {
       let midiDevice = new WebMIDIDevice("DX7IIFD");

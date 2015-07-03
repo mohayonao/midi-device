@@ -9,6 +9,10 @@ export default class MIDIDevice extends EventEmitter {
     this._deviceName = deviceName;
   }
 
+  static requestDeviceNames() {
+    return Promise.reject(new Error("subclass responsibility"));
+  }
+
   get deviceName() {
     return this._deviceName;
   }
