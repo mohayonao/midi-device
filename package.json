@@ -7,6 +7,7 @@
     "url": "https://github.com/mohayonao/midi-device/issues"
   },
   "dependencies": {
+    "@mohayonao/event-emitter": "^1.0.1",
     "midi": "^0.9.3",
     "synchronizer": "^0.1.0"
   },
