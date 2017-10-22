@@ -1,5 +1,5 @@
 import assert from "power-assert";
-import EventEmitter from "../src/EventEmitter";
+import { EventEmitter } from "events";
 import MIDIDevice from "../src/MIDIDevice";
 
 describe("MIDIDevice", () => {
