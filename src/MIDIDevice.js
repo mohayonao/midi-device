@@ -1,4 +1,4 @@
-import EventEmitter from "./EventEmitter";
+import { EventEmitter } from "events";
 
 export default class MIDIDevice extends EventEmitter {
   constructor(deviceName) {
