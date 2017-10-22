@@ -54,6 +54,6 @@
     "preversion": "npm-run-all lint test",
     "test": "mocha",
     "travis": "npm-run-all lint test",
-    "version": "npm run build && git add -A dist"
+    "version": "npm run build"
   }
 }
